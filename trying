@@ -1,0 +1,26 @@
+import pygame, sys
+from pygame.locals import *
+
+pygame.init()
+
+screen = pygame.display.set_mode((1000,690))
+pygame.display.set_caption("E.M.'s RUSH")
+
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+
+rect_x = 50
+ 
+# -------- Main Program Loop -----------
+while True:
+    for event in pygame.event.get(): 
+        if event.type == pygame.QUIT: # If user clicked close
+           pygame.quit(); sys.exit();
+ 
+    # Set the screen background
+    screen.fill(BLACK)
+ 
+    pygame.draw.rect(screen, WHITE, [rect_x, 50, 50, 50])
+    rect_x += 1
+    
+    pygame.display.update()
