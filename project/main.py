@@ -51,7 +51,7 @@ BLUE = (0, 0, 255)
 lovely_BLUE = (47, 164, 245)
 RED = (255, 0, 0)
 
-background = pygame.image.load("bg.jpg")
+background = pygame.image.load("bg1.jpg")
 back_rect = background.get_rect()
 max_x = back_rect.right - 380
 backsurf = pygame.Surface((480, 390))
