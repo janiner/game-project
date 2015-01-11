@@ -1,5 +1,21 @@
 import pygame, sys, random, glob
 
+from Tkinter import *
+
+def close():
+    exit()
+
+window = Tk()
+menubar = Menu(window)
+
+filemenu = Menu(menubar, tearoff=0)
+filemenu.add_command(label="Close", command=close)
+
+menubar.add_cascade(label="File", menu=filemenu)
+
+window.config(menu=menubar)
+window.mainloop()
+
 def scroll(x, direction):
     if direction == "left":
         x = x - 1
@@ -119,3 +135,4 @@ while True:
 
     clock.tick(FPS)
     pygame.display.update()
+game_intro()
