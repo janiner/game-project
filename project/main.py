@@ -46,7 +46,7 @@ class innerPlayer(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
 def jump_update(y, jump, number):
-    jump_speed = 10
+    jump_speed = 20
     if number == 1:
         if jump == "up" and y < 50:
             jump = "down"
@@ -116,6 +116,6 @@ while True:
 
     lovely.image = pygame.image.load(lovely.img_list[lovely.img_position])
 
+
     clock.tick(FPS)
     pygame.display.update()
-game_intro()
