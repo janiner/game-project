@@ -7,6 +7,26 @@ def scroll(x, direction):
         x = x + 1
     return (x)
 
+def pause():
+
+    paused = True
+
+    while paused:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_c:
+                  paused = False
+
+                elif event.key == pyagme.K_q:
+                    pygame.quit()
+                    quit()
+        pygame.display.update()
+        clock.tick(5)
+        
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -50,6 +70,7 @@ FPS = 20
 BLUE = (0, 0, 255)
 lovely_BLUE = (47, 164, 245)
 RED = (255, 0, 0)
+white = (255,255,255)
 
 background = pygame.image.load("bg.jpg")
 back_rect = background.get_rect()
@@ -79,6 +100,8 @@ while True:
                     if lovely.jump_number < 2:
                         lovely.jump = "up"
                         lovely.jump_number += 1
+            if event.key == pygame.K_p:
+                pause()
 
     x = scroll(x, direction)
     backsurf.blit(background, (0,0), (x, 0, 480 + x, 390))            
@@ -95,3 +118,4 @@ while True:
 
     clock.tick(FPS)
     pygame.display.update()
+game_intro()
