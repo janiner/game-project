@@ -1,5 +1,21 @@
 import pygame, sys, random, glob
 
+from Tkinter import *
+
+def close():
+    exit()
+
+window = Tk()
+menubar = Menu(window)
+
+filemenu = Menu(menubar, tearoff=0)
+filemenu.add_command(label="Close", command=close)
+
+menubar.add_cascade(label="File", menu=filemenu)
+
+window.config(menu=menubar)
+window.mainloop()
+
 def scroll(x, direction):
     if direction == "left":
         x = x - 1
@@ -46,7 +62,7 @@ class innerPlayer(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
 def jump_update(y, jump, number):
-    jump_speed = 10
+    jump_speed = 20
     if number == 1:
         if jump == "up" and y < 50:
             jump = "down"
@@ -115,6 +131,7 @@ while True:
             lovely.img_position = 0
 
     lovely.image = pygame.image.load(lovely.img_list[lovely.img_position])
+
 
     clock.tick(FPS)
     pygame.display.update()
