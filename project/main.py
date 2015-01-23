@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.img_position = 2
-        self.img_list = glob.glob("img/n*.png")
+        self.img_list = glob.glob("img/l*.png")
         self.image = pygame.image.load(self.img_list[self.img_position])
         self.rect = self.image.get_rect()
         self.rect.top = 180
@@ -79,14 +79,14 @@ def jump_update(y, jump, number):
 pygame.init()
 screen = pygame.display.set_mode((520, 370))
 clock = pygame.time.Clock()
-FPS = 20
+FPS = 30
 BLUE = (0, 0, 255)
 lovely_BLUE = (47, 164, 245)
 RED = (255, 0, 0)
 white = (255,255,255)
 
 gameOver = False
-background = pygame.image.load("bg3.jpg")
+background = pygame.image.load("2bg.jpg")
 back_rect = background.get_rect()
 max_x = back_rect.right - 640
 backsurf = pygame.Surface((520, 370))
@@ -128,7 +128,7 @@ while True:
 
     lovely.rect.top, lovely.jump, lovely.jump_number = jump_update(lovely.rect.top, lovely.jump, lovely.jump_number)
     screen.blit(lovely.image, lovely.rect)
-    if lovely.img_position < 3:
+    if lovely.img_position < 2:
             lovely.img_position += 1
     else:
             lovely.img_position = 0
