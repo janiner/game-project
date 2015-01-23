@@ -1,27 +1,23 @@
 import pygame, sys, random, glob
 
-from Tkinter import *
-
-def close():
-    exit()
-
-window = Tk()
-menubar = Menu(window)
-
-filemenu = Menu(menubar, tearoff=0)
-filemenu.add_command(label="Close", command=close)
-
-menubar.add_cascade(label="File", menu=filemenu)
-
-window.config(menu=menubar)
-window.mainloop()
 
 def scroll(x, direction):
     if direction == "left":
         x = x - 1
     elif direction == "right":
-        x = x + 1
+        x = x + 4
     return (x)
+
+def nextLevel():
+    RED= (255, 0, 0)
+    lev_font = pygame.font.Font("basefont.ttf", 38)
+    congrats = lev_font.render("Moving to", True, RED)
+    level_surface = lev_font.render("Next Level", True, RED)
+    surface = pygame.Surface((480, 320))
+    surface.fill((0,0,0))
+    surface.blit(congrats, (50, 50))
+    surface.blit(level_surface, (50, 200))
+    return (surface)
 
 def pause():
 
@@ -46,14 +42,15 @@ def pause():
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.img_position = 0
+        self.img_position = 2
         self.img_list = glob.glob("img/n*.png")
         self.image = pygame.image.load(self.img_list[self.img_position])
         self.rect = self.image.get_rect()
-        self.rect.top = 130
+        self.rect.top = 180
         self.rect.left = 180
         self.jump = "stop"
         self.jump_number = 0
+        
 
 class innerPlayer(pygame.sprite.Sprite):
     def __init__(self):
@@ -71,7 +68,7 @@ def jump_update(y, jump, number):
             jump = "down"
     if jump == "down" and y >= 140:
         jump = "stop"
-        y = 140
+        y = 180
         number = 0
     if jump == "up":
         y = y - jump_speed
@@ -80,7 +77,7 @@ def jump_update(y, jump, number):
     return(y, jump, number)
 
 pygame.init()
-screen = pygame.display.set_mode((480, 320))
+screen = pygame.display.set_mode((520, 370))
 clock = pygame.time.Clock()
 FPS = 20
 BLUE = (0, 0, 255)
@@ -88,10 +85,11 @@ lovely_BLUE = (47, 164, 245)
 RED = (255, 0, 0)
 white = (255,255,255)
 
+gameOver = False
 background = pygame.image.load("bg3.jpg")
 back_rect = background.get_rect()
-max_x = back_rect.right - 380
-backsurf = pygame.Surface((480, 390))
+max_x = back_rect.right - 640
+backsurf = pygame.Surface((520, 370))
 
 
 x = 0
@@ -118,9 +116,14 @@ while True:
                         lovely.jump_number += 1
             if event.key == pygame.K_p:
                 pause()
-
+    #if x > max_x:
+        #gameOver = True
+    #if gameOver:
+        #nextScreen = nextLevel()
+        #screen.blit(nextScreen, (0, 0))
+        
     x = scroll(x, direction)
-    backsurf.blit(background, (0,0), (x, 0, 480 + x, 390))            
+    backsurf.blit(background, (0,0), (x, 0, 520 + x, 390))            
     screen.blit(backsurf, (0,0))
 
     lovely.rect.top, lovely.jump, lovely.jump_number = jump_update(lovely.rect.top, lovely.jump, lovely.jump_number)
