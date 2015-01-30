@@ -8,6 +8,16 @@ def scroll(x, direction):
         x = x + 4
     return (x)
 
+
+class Ground(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("background/pavement.png")
+        self.rect = self.image.get_rect()
+        self.rect.bottom = 420
+    def update(self):
+        self.rect.left -= 8
+        
 def nextLevel():
     RED= (255, 0, 0)
     lev_font = pygame.font.Font("basefont.ttf", 38)
@@ -46,8 +56,8 @@ class Player(pygame.sprite.Sprite):
         self.img_list = glob.glob("img/l*.png")
         self.image = pygame.image.load(self.img_list[self.img_position])
         self.rect = self.image.get_rect()
-        self.rect.top = 180
-        self.rect.left = 180
+        self.rect.top = 200
+        self.rect.left = 120
         self.jump = "stop"
         self.jump_number = 0
         
@@ -59,7 +69,7 @@ class innerPlayer(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
 def jump_update(y, jump, number):
-    jump_speed = 20
+    jump_speed = 15
     if number == 1:
         if jump == "up" and y < 50:
             jump = "down"
@@ -68,7 +78,7 @@ def jump_update(y, jump, number):
             jump = "down"
     if jump == "down" and y >= 140:
         jump = "stop"
-        y = 180
+        y = 200
         number = 0
     if jump == "up":
         y = y - jump_speed
@@ -76,20 +86,28 @@ def jump_update(y, jump, number):
         y = y + jump_speed
     return(y, jump, number)
 
+def load_pavement(pavement):
+    pavement.empty()
+    for x in range(0, 645, 32):
+        ground = Ground()
+        ground.rect.left = x
+        pavement.add(ground)
+    return(pavement)
+
 pygame.init()
-screen = pygame.display.set_mode((520, 370))
+screen = pygame.display.set_mode((640, 400))
 clock = pygame.time.Clock()
-FPS = 30
+FPS = 20
 BLUE = (0, 0, 255)
 lovely_BLUE = (47, 164, 245)
 RED = (255, 0, 0)
 white = (255,255,255)
 
 gameOver = False
-background = pygame.image.load("2bg.jpg")
+background = pygame.image.load("background/2bg.jpg")
 back_rect = background.get_rect()
-max_x = back_rect.right - 640
-backsurf = pygame.Surface((520, 370))
+max_x = back_rect.right - 600
+backsurf = pygame.Surface((640, 400))
 
 
 x = 0
@@ -98,6 +116,13 @@ direction = "right"
 
 lovely = Player()
 innerLovely = innerPlayer()
+
+pavement = pygame.sprite.Group()
+
+ground_counter = 32
+
+pavement = load_pavement(pavement)
+
 
 while True:
     for event in pygame.event.get():
@@ -116,26 +141,38 @@ while True:
                         lovely.jump_number += 1
             if event.key == pygame.K_p:
                 pause()
-    #if x > max_x:
-        #gameOver = True
-    #if gameOver:
-        #nextScreen = nextLevel()
-        #screen.blit(nextScreen, (0, 0))
+    if x > max_x:
+        gameOver = True
+    if gameOver:
+        nextScreen = nextLevel()
+        screen.blit(nextScreen, (0, 0))
+    elif not gameOver:
+        x = scroll(x, direction)
+        backsurf.blit(background, (0,0), (x, 0, 640 + x, 420))            
+        screen.blit(backsurf, (0,0))
         
-    x = scroll(x, direction)
-    backsurf.blit(background, (0,0), (x, 0, 520 + x, 390))            
-    screen.blit(backsurf, (0,0))
+        x = scroll(x, direction)
+        backsurf.blit(background, (0,0), (x, 0, 640 + x, 420))            
+        screen.blit(backsurf, (0,0))
 
-    lovely.rect.top, lovely.jump, lovely.jump_number = jump_update(lovely.rect.top, lovely.jump, lovely.jump_number)
-    screen.blit(lovely.image, lovely.rect)
-    if lovely.img_position < 2:
+        lovely.rect.top, lovely.jump, lovely.jump_number = jump_update(lovely.rect.top, lovely.jump, lovely.jump_number)
+        screen.blit(lovely.image, lovely.rect)
+        if lovely.img_position < 2:
             lovely.img_position += 1
-    else:
+        else:
             lovely.img_position = 0
 
-    lovely.image = pygame.image.load(lovely.img_list[lovely.img_position])
+        lovely.image = pygame.image.load(lovely.img_list[lovely.img_position])
 
-
+        if ground_counter > 0:
+            pavement.update()
+            ground_counter -= 8
+        else:
+            pavement = load_pavement(pavement)
+            ground_counter = 32
+        
+        pavement.draw(screen)
+        
     clock.tick(FPS)
     pygame.display.update()
 game_intro()
