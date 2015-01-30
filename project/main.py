@@ -23,7 +23,7 @@ def nextLevel():
     lev_font = pygame.font.Font("basefont.ttf", 38)
     congrats = lev_font.render("Moving to", True, RED)
     level_surface = lev_font.render("Next Level", True, RED)
-    surface = pygame.Surface((480, 320))
+    surface = pygame.Surface((640, 400))
     surface.fill((0,0,0))
     surface.blit(congrats, (50, 50))
     surface.blit(level_surface, (50, 200))
