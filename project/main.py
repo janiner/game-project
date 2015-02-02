@@ -17,6 +17,17 @@ class Ground(pygame.sprite.Sprite):
         self.rect.bottom = 420
     def update(self):
         self.rect.left -= 8
+
+class Obstacle(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("obstacles/poop.png")
+        self.rect = self.image.get_rect()
+        self.rect.bottom = 390
+        self.rect.left = 480
+
+    def update(self):
+        self.rect.left -= 8
         
 def nextLevel():
     RED= (255, 0, 0)
@@ -117,6 +128,11 @@ direction = "right"
 lovely = Player()
 innerLovely = innerPlayer()
 
+poop = Obstacle()
+obstacle_group = pygame.sprite.Group()
+obstacle_group.add(poop)
+obstacle_spawn_delay = 10
+
 pavement = pygame.sprite.Group()
 
 ground_counter = 32
@@ -172,6 +188,18 @@ while True:
             ground_counter = 32
         
         pavement.draw(screen)
+
+        for obstacle in obstacle_group:
+            if obstacle.rect.right < 0:
+                obstacle_group.remove(obstacle)
+        
+        if obstacle_spawn_delay > 0:
+            obstacle_spawn_delay -= 1
+        else:
+            obstacle_group.add(Obstacle())
+            obstacle_spawn_delay = random.randrange(80, 140, 5)
+        obstacle_group.update()
+        obstacle_group.draw(screen)
         
     clock.tick(FPS)
     pygame.display.update()
