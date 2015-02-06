@@ -1,6 +1,16 @@
 import pygame, sys, random, glob
+import load
+import slidemenu
 
-
+screen = pygame.display.set_mode((640, 400))
+clock = pygame.time.Clock()
+pygame.display.set_caption("EM'S RUSH")
+FPS = 20
+BLUE = (0, 0, 255)
+lovely_BLUE = (47, 164, 245)
+RED = (255, 0, 0)
+white = (255,255,255)
+    
 def scroll(x, direction):
     if direction == "left":
         x = x - 1
@@ -39,9 +49,9 @@ def nextLevel():
     surface.blit(congrats, (50, 50))
     surface.blit(level_surface, (50, 200))
     return (surface)
-
+        
 def pause():
-
+    
     paused = True
 
     while paused:
@@ -59,7 +69,21 @@ def pause():
                     quit()
         pygame.display.update()
         clock.tick(5)
-        
+def gameover():
+    RED = (255, 0, 0)
+    go = pygame.image.load("others/gameover.png")
+    backsurf = pygame.Surface((640, 400))
+    #backsurf.blit(go, (0,0))            
+    #screen.blit(backsurf, (0,0))
+    ouch_font = pygame.font.Font("font/Dk Pundak.otf", 76)
+    ouch_surf = ouch_font.render("OUCH!!!", True, RED)
+    #nextScreen = nextLevel()
+    #backsurf.blit(nextScreen, (0, 0))
+    #backsurf.blit(ouch_surf, (0, 0))
+    screen.blit(go, (0,0))
+    
+    
+
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -71,6 +95,27 @@ class Player(pygame.sprite.Sprite):
         self.rect.left = 120
         self.jump = "stop"
         self.jump_number = 0
+        self.dx = 0
+	self.oldDX = self.dx
+	self.dy = 0
+	self.direction = 1
+        self.MP = 2000.
+	self.maxMP = self.MP
+	self.in_level = 1
+	self.maxHeight = 60
+	self.fallspeed = 0
+	self.falling = False
+	self.hitBool = 0
+
+	# If hit, the player will be knocked in the opposite direction he was last moving
+    def gotHit(self):
+	    self.MP -= 700
+	    self.hitBool = 1
+	    self.oldDX = self.dx
+	    if self.direction == 1:
+		    self.dx = -7.5
+	    else:
+		    self.dx = 7.5
         
 
 class innerPlayer(pygame.sprite.Sprite):
@@ -104,103 +149,114 @@ def load_pavement(pavement):
         ground.rect.left = x
         pavement.add(ground)
     return(pavement)
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((640, 400))
+    clock = pygame.time.Clock()
+    pygame.display.set_caption("EM'S RUSH")
+    FPS = 20
+    BLUE = (0, 0, 255)
+    lovely_BLUE = (47, 164, 245)
+    RED = (255, 0, 0)
+    white = (255,255,255)
 
-pygame.init()
-screen = pygame.display.set_mode((640, 400))
-clock = pygame.time.Clock()
-FPS = 20
-BLUE = (0, 0, 255)
-lovely_BLUE = (47, 164, 245)
-RED = (255, 0, 0)
-white = (255,255,255)
+#load.Credits(screen)
 
-gameOver = False
-background = pygame.image.load("background/2bg.jpg")
-back_rect = background.get_rect()
-max_x = back_rect.right - 600
-backsurf = pygame.Surface((640, 400))
+    gameOver = False
+    background = pygame.image.load("background/2bg.jpg")
+    back_rect = background.get_rect()
+    max_x = back_rect.right - 600
+    backsurf = pygame.Surface((640, 400))
 
+    go = pygame.image.load("others/gameover.png")
 
-x = 0
+#load.Load(screen)
+    x = 0
 
-direction = "right"
+    direction = "right"
 
-lovely = Player()
-innerLovely = innerPlayer()
+    lovely = Player()
+    innerLovely = innerPlayer()
 
-poop = Obstacle()
-obstacle_group = pygame.sprite.Group()
-obstacle_group.add(poop)
-obstacle_spawn_delay = 10
+    poop = Obstacle()
+    obstacle_group = pygame.sprite.Group()
+    obstacle_group.add(poop)
+    obstacle_spawn_delay = 10
 
-pavement = pygame.sprite.Group()
+    pavement = pygame.sprite.Group()
 
-ground_counter = 32
+    ground_counter = 32
 
-pavement = load_pavement(pavement)
+    pavement = load_pavement(pavement)
 
 
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
-                direction = "right"
-            if event.key == pygame.K_LEFT:
-                direction = "left"
-            if lovely.jump != "up" or lovely.jump != "down":
-                if event.key == pygame.K_SPACE:
-                    if lovely.jump_number < 2:
-                        lovely.jump = "up"
-                        lovely.jump_number += 1
-            if event.key == pygame.K_p:
-                pause()
-    if x > max_x:
-        gameOver = True
-    if gameOver:
-        nextScreen = nextLevel()
-        screen.blit(nextScreen, (0, 0))
-    elif not gameOver:
-        x = scroll(x, direction)
-        backsurf.blit(background, (0,0), (x, 0, 640 + x, 420))            
-        screen.blit(backsurf, (0,0))
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    direction = "right"
+                if event.key == pygame.K_LEFT:
+                    direction = "left"
+                if lovely.jump != "up" or lovely.jump != "down":
+                    if event.key == pygame.K_SPACE:
+                        if lovely.jump_number < 2:
+                            lovely.jump = "up"
+                            lovely.jump_number += 1
+                if event.key == pygame.K_p:
+                    pause()
+        if x > max_x:
+            gameOver = True
+        if gameOver:
+            nextScreen = nextLevel()
+            screen.blit(nextScreen, (0, 0))
+        elif not gameOver:
+            x = scroll(x, direction)
+            backsurf.blit(background, (0,0), (x, 0, 640 + x, 420))            
+            screen.blit(backsurf, (0,0))
         
-        x = scroll(x, direction)
-        backsurf.blit(background, (0,0), (x, 0, 640 + x, 420))            
-        screen.blit(backsurf, (0,0))
+            x = scroll(x, direction)
+            backsurf.blit(background, (0,0), (x, 0, 640 + x, 420))            
+            screen.blit(backsurf, (0,0))
 
-        lovely.rect.top, lovely.jump, lovely.jump_number = jump_update(lovely.rect.top, lovely.jump, lovely.jump_number)
-        screen.blit(lovely.image, lovely.rect)
-        if lovely.img_position < 2:
-            lovely.img_position += 1
-        else:
-            lovely.img_position = 0
+            lovely.rect.top, lovely.jump, lovely.jump_number = jump_update(lovely.rect.top, lovely.jump, lovely.jump_number)
+            screen.blit(lovely.image, lovely.rect)
+            if lovely.img_position < 2:
+                lovely.img_position += 1
+            else:
+                lovely.img_position = 0
 
-        lovely.image = pygame.image.load(lovely.img_list[lovely.img_position])
+            lovely.image = pygame.image.load(lovely.img_list[lovely.img_position])
 
-        if ground_counter > 0:
-            pavement.update()
-            ground_counter -= 8
-        else:
-            pavement = load_pavement(pavement)
-            ground_counter = 32
+            if ground_counter > 0:
+                pavement.update()
+                ground_counter -= 8
+            else:
+                pavement = load_pavement(pavement)
+                ground_counter = 32
         
-        pavement.draw(screen)
+            pavement.draw(screen)
 
-        for obstacle in obstacle_group:
-            if obstacle.rect.right < 0:
-                obstacle_group.remove(obstacle)
+            for obstacle in obstacle_group:
+                if obstacle.rect.right < 0:
+                    obstacle_group.remove(obstacle)
         
-        if obstacle_spawn_delay > 0:
-            obstacle_spawn_delay -= 1
-        else:
-            obstacle_group.add(Obstacle())
-            obstacle_spawn_delay = random.randrange(80, 140, 5)
-        obstacle_group.update()
-        obstacle_group.draw(screen)
-        
-    clock.tick(FPS)
-    pygame.display.update()
-game_intro()
+            if obstacle_spawn_delay > 0:
+                obstacle_spawn_delay -= 1
+            else:
+                obstacle_group.add(Obstacle())
+                obstacle_spawn_delay = random.randrange(80, 140, 5)
+            obstacle_group.update()
+            obstacle_group.draw(screen)
+
+
+            innerLovely.rect.center = lovely.rect.center
+            if pygame.sprite.spritecollideany(innerLovely, obstacle_group):
+            #print("collision")
+                gameover()
+            
+                clock.tick(FPS)
+        pygame.display.update()
+    game_intro()
