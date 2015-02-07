@@ -8,7 +8,7 @@ try: import GetEvent
 except: from . import GetEvent
 import load
 import main
-import about
+#import about
 
 def menu(
          menu,                          # iterable of str as ("item",) or ("item::tooltip",)
@@ -321,7 +321,7 @@ if __name__ == '__main__':
     from os.path import dirname,join
     here = dirname('main.py')
     scr = display.set_mode((640,400))
-    load.Credits(scr)
+    #load.Credits(scr)
     bg = image.load(join(here,'others/start.jpg'))
     scr.blit(bg,bg.get_rect(center=scr.get_rect().center))
     #~ scr.fill(-1)
@@ -345,8 +345,8 @@ if __name__ == '__main__':
             main.main()
         if resp[0] == "highscore":
             load.Load(scr)
-        if resp[0] == "about":
-            about.about()
+        #if resp[0] == "about":
+         #   about.about()
         if resp[0] != "re-show": break
     print(resp)
     quit()
