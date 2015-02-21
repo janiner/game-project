@@ -53,6 +53,7 @@ class Obstacles(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.left -= 8
+        
 class Pauseb(pygame.sprite.Sprite):
     blue = (0, 0, 255)
     def __init__(self,color= blue, width=60, height=60):
@@ -70,13 +71,6 @@ class Pauseb(pygame.sprite.Sprite):
             self.image=pygame.image.load(filename)
             self.rect=self.image.get_rect()
 
-                
-    def pressed(self,mouse):
-        if mouse[0]==self.rect.x:
-            if mouse[1]==self.rect.y:
-                return True
-            else: return False
-        else: return False
     
 class Sound(pygame.sprite.Sprite):
     blue = (0, 0, 255)
@@ -102,6 +96,24 @@ class Sound(pygame.sprite.Sprite):
 
     def stopsound(self):
         self.sound.stop()
+
+class back(pygame.sprite.Sprite):
+    blue = (0, 0, 255)
+    def __init__(self,color= blue, width=60, height=60):
+        super(back, self).__init__()
+        self.image = pygame.Surface((width,height))
+        self.image.fill(color)
+        self.rect=self.image.get_rect()
+
+    def set_position(self,x,y):
+        self.rect.x=x
+        self.rect.y=y
+
+    def set_image(self,filename=None):
+        if (filename!=None):
+            self.image=pygame.image.load(filename)
+            self.rect=self.image.get_rect()
+
 
 class Coin(pygame.sprite.Sprite):
     def __init__(self):
@@ -140,13 +152,17 @@ def pause():
                 pygame.quit()
                 quit()
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_c:
-                  paused = False
+            #if event.type == pygame.KEYDOWN:
+             #   if event.key == pygame.K_c:
+              #    paused = False
+            a_pause=Pauseb()
+            if (event.type ==pygame.MOUSEBUTTONDOWN):
+                if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
+                    paused=False
 
-                elif event.key == pyagme.K_q:
-                    pygame.quit()
-                    quit()
+                #elif event.key == pygame.K_q:
+                 #   pygame.quit()
+                  #  quit()
         pygame.display.update()
         clock.tick(5)
 
@@ -285,10 +301,10 @@ def main():
     coin_group.add(coin)
     coin_spawn_delay = 5
 
-    font = pygame.font.Font("font/DK Pundak.otf", 24)
+    font = pygame.font.Font("font/DK Pundak.otf", 27)
     coins=0
     text = font.render("Score: %s" %(coins), 1, (10,15,30))
-    screen.blit(text, (510,10))
+    screen.blit(text, (250,20))
 
     
 
@@ -305,12 +321,19 @@ def main():
     a_pause=Pauseb()
     a_pause.set_image("others/pause.png")
     a_pause.set_position(10,10)
+    paused =False
 
     sounds=pygame.sprite.Group()
     a_sound=Sound()
     a_sound.set_image("others/soundOn.png")
     a_sound.set_position(65,10)
     a_sound.playsound()
+    soundss=0
+    
+    backb=pygame.sprite.Group()
+    a_back=back()
+    a_back.set_image("others/back.png")
+    a_back.set_position(580,10)
     
     while True:
         for event in pygame.event.get():
@@ -335,27 +358,45 @@ def main():
             #music = pygame.mixer.Sound("sounds-temporay/jum.mp3")
             #pygame.mixer.music.load('sounds-temporary/rush.wav')
             #pygame.mixer.music.play()
-            #music.play() 
+            #music.play()
+            ppp=0
             if (event.type==pygame.MOUSEMOTION):
                 mouse= pygame.mouse.get_pos()
                 pb=pygame.image.load("others/pause.png")
                 pauser=pb.get_rect()
                 pp=pygame.transform.scale(pb,(70,70))
+                
                 if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
-                    screen.blit(pp,(10,10))
+                    screen.blit(pp,(20,20))
                     
             if (event.type ==pygame.MOUSEBUTTONDOWN):
                 mouse= pygame.mouse.get_pos()
                 #if (event.pos[0]== 10 ):
+                #if paused==True:
                 if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
-                #if a_pause.pressed(mouse):
                     pause()
-                if(event.pos[0] < a_sound.rect.x+50  and event.pos[1]>a_sound.rect.y and event.pos[0]>a_sound.rect.x and event.pos[1]<a_sound.rect.y+50):
+                        #paused=False
+                #else:
+                  #  if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
+                 #       paused=False
+                #if(event.pos[0] < a_back.rect.x+570  and event.pos[1]>a_back.rect.y and event.pos[0]>a_back.rect.x and event.pos[1]<a_back.rect.y+570):
+                    #break
+                    #slidemenu.main
                     
-                    print("off")
-                    a_sound.set_image("others/soundOff.png")
-                    a_sound.set_position(65,10)
-                    a_sound.stopsound()
+                if soundss==0:
+                    if(event.pos[0] < a_sound.rect.x+50  and event.pos[1]>a_sound.rect.y and event.pos[0]>a_sound.rect.x and event.pos[1]<a_sound.rect.y+50):
+                        a_sound.set_image("others/soundOff.png")
+                        a_sound.set_position(65,10)
+                        a_sound.stopsound()
+                        soundss=1
+                       
+                else:
+                    if(event.pos[0] < a_sound.rect.x+50  and event.pos[1]>a_sound.rect.y and event.pos[0]>a_sound.rect.x and event.pos[1]<a_sound.rect.y+50):
+                        a_sound.set_image("others/soundOn.png")
+                        a_sound.set_position(65,10)
+                        a_sound.playsound()
+                        soundss=0
+                    
                     #if(event.pos[0] < a_sound.rect.x+50  and event.pos[1]>a_sound.rect.y and event.pos[0]>a_sound.rect.x and event.pos[1]<a_sound.rect.y+50):
 #                        a_sound.set_image("others/soundOn.png")
  #                       a_sound.set_position(65,10)
@@ -369,27 +410,24 @@ def main():
                     
                 if event.key == pygame.K_LEFT:
                     direction = "left"
-                #if event.key == pygame.K_p:
-                 #   paused=True
-            if (event.type==pygame.MOUSEMOTION):
-                mouse= pygame.mouse.get_pos()
-                pb=pygame.image.load("others/pause.png")
-                pauser=pb.get_rect()
-                pp=pygame.transform.scale(pb,(90,90))
+                    
+            #if (event.type==pygame.MOUSEMOTION):
+             #   mouse= pygame.mouse.get_pos()
+              #  pb=pygame.image.load("others/pause.png")
+               # pauser=pb.get_rect()
 
-                print(mouse)
-                if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
-                    screen.blit(pp,pauser)
+                #pp=pygame.transform.scale(pb,(90,90))
+
+                #if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
+                 #   screen.blit(pp,pauser)
                 #if(event.pos[0] < a_sound.rect.x+50  and event.pos[1]>a_sound.rect.y and event.pos[0]>a_sound.rect.x and event.pos[1]<a_sound.rect.y+50):
                     
                     
             if (event.type ==pygame.MOUSEBUTTONUP):
                 mouse = pygame.mouse.get_pos()
-                #mouse= pygame.mouse.get_pos()
-                #if (event.pos[0]== 10 ):
                 if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
-                #if a_pause.pressed(mouse):
                     paused=True
+                    
         if x > max_x:
             gameOver = True
         if gameOver:
@@ -406,14 +444,12 @@ def main():
             backsurf.blit(background, (0,0), (x, 0, 640 + x, 420))            
             screen.blit(backsurf, (0,0))
 
-            
-    
-            
-
             pauseg.add(a_pause)
             pauseg.draw(screen)
 
-            
+            backb.add(a_back)
+            backb.draw(screen)
+       
             sounds.add(a_sound)
             sounds.draw(screen)
     
@@ -453,7 +489,7 @@ def main():
                 if (lives==0):
             #print("collision")
                     gameover()
-                    #gameOver = True
+                    gameOver = True
                     
             
             for coin in coin_group:
@@ -481,7 +517,7 @@ def main():
                #     gameover()
                 #    print('gg')
             text = font.render("Score: %s" %(coins), 1, (10,15,30))
-            screen.blit(text, (510,10))
+            screen.blit(text, (250,20))
 
             #if obstacles_spawn_delay > 0:
              #   obstacles_spawn_delay -= 1
