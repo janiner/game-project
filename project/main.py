@@ -434,6 +434,7 @@ def main():
                     scr.blit(bg,bg.get_rect(center=scr.get_rect().center))
                     #~ scr.fill(-1)
                     pygame.display.flip()
+                    a_sound.stopsound()
                     while True:
                         resp= slidemenu.menu(['play',
                                          'highscore',
@@ -461,7 +462,10 @@ def main():
                     quit()
                     
                 if(event.pos[0] < a_reload.rect.x+510  and event.pos[1]>a_reload.rect.y and event.pos[0]>a_reload.rect.x and event.pos[1]<a_reload.rect.y+510):
-                    main()    
+                    a_sound.stopsound()
+                    main()
+                    
+                    
                 if soundss==0:
                     if(event.pos[0] < a_sound.rect.x+50  and event.pos[1]>a_sound.rect.y and event.pos[0]>a_sound.rect.x and event.pos[1]<a_sound.rect.y+50):
                         a_sound.set_image("others/soundOff.png")
