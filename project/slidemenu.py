@@ -329,15 +329,18 @@ if __name__ == '__main__':
     #load.Credits(scr)
     icon = pygame.image.load('logo/icon.png')
     pygame.display.set_icon(icon)
-    bg = image.load(join(here,'others/start.jpg'))
+    #bgs=glob.glob(join(here,"others/start*.jpg"))
+   # bg = image.load(join(here,'others/start.jpg'))
+    bg = image.load(join(here,'others/start2.jpg'))
     scr.blit(bg,bg.get_rect(center=scr.get_rect().center))
     #~ scr.fill(-1)
     display.flip();print(menu.__doc__)
     while True:
         
+        
         resp = menu(['play',
                      'highscore',
-                     'about',
+                     'help',
                      'quit::good bye'],
                      font1      = font.Font(join(here,'font/DK Pundak.otf'),25),
                      font2      = font.Font(join(here,'font/DK Pundak.otf'),30),
@@ -353,7 +356,9 @@ if __name__ == '__main__':
             main.main()
         if resp[0] == "highscore":
             load.Load(scr)
-        if resp[0] == "about":
+        if resp[0] == "help":
+            abouts = pygame.image.load('obstacles/poop.png')
+            scr.blit(abouts, (50,10))
             about.about(scr)
             
             #display.update()

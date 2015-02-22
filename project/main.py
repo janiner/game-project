@@ -223,7 +223,7 @@ def gameover():
     #block = {'rect':pygame.Rect(200, 80, 230, 250),'color':WHITE}
     #pygame.draw.rect(screen, block['color'], block['rect'])
     #screen.blit(text_appear,(230,100))
-    screen.blit(go, (0,0))
+    screen.blit(go, (180,0))
    
 
 class Player(pygame.sprite.Sprite):
@@ -438,7 +438,7 @@ def main():
                     while True:
                         resp= slidemenu.menu(['play',
                                          'highscore',
-                                        'about',
+                                        'help',
                                          'quit::good bye'],
                                          font1      = pygame.font.Font(join(here,'font/DK Pundak.otf'),25),
                                         font2      = pygame.font.Font(join(here,'font/DK Pundak.otf'),30),
@@ -453,8 +453,8 @@ def main():
                             main()
                         if resp[0] == "highscore":
                             load.Load(scr)
-                        if resp[0] == "about":
-                            about.help(scr)
+                        if resp[0] == "help":
+                            about.about(scr)
             
             #display.update()
                         if resp[0] != "re-show": break
@@ -517,6 +517,7 @@ def main():
             #nextScreen = nextLevel()
             #screen.blit(nextScreen, (0, 0))
             #coin_group.remove(coin)
+            gameover()
             print ('f')
         elif not gameOver:
 
@@ -580,8 +581,8 @@ def main():
                 lives=lives-1
                 if (lives==0):
             #print("collision")
-                    gameover()
-                    #gameOver = True
+                    
+                    gameOver = True
                     
             
             for coin in coin_group:
