@@ -3,12 +3,17 @@
 
 from pygame import *
 font.init()
+
+from math import cos, radians
+import pygame, sys, random, glob
 from math import cos,radians
 try: import GetEvent
 except: from . import GetEvent
 import load
 import main
-#import about
+import about
+import pygame, sys, random, glob
+
 
 def menu(
          menu,                          # iterable of str as ("item",) or ("item::tooltip",)
@@ -322,6 +327,8 @@ if __name__ == '__main__':
     here = dirname('main.py')
     scr = display.set_mode((640,400))
     #load.Credits(scr)
+    icon = pygame.image.load('logo/icon.png')
+    pygame.display.set_icon(icon)
     bg = image.load(join(here,'others/start.jpg'))
     scr.blit(bg,bg.get_rect(center=scr.get_rect().center))
     #~ scr.fill(-1)
@@ -340,13 +347,16 @@ if __name__ == '__main__':
                      tooltiptime= 1000,
                      cursor_img = image.load('others/mouse.png'),
                      hotspot    = (38,15))
+        
         if resp[0] == "play":
             load.Load(scr)
             main.main()
         if resp[0] == "highscore":
             load.Load(scr)
-        #if resp[0] == "about":
-         #   about.about()
+        if resp[0] == "about":
+            about.about(scr)
+            
+            #display.update()
         if resp[0] != "re-show": break
     print(resp)
     quit()

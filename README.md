@@ -1,6 +1,6 @@
 E.M's RUSH
 
-Name of the Group: Lovely Jam ?
+Name of the Group: Lovely Jam 
 
 Members:
 Reyes, Anna Marie D.
