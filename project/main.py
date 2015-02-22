@@ -171,7 +171,7 @@ def pause():
     pausesg=pygame.sprite.Group()
     a_pauses=Pauseb()
     a_pauses.set_image("others/resume.png")
-    a_pauses.set_position(270,25)
+    a_pauses.set_position(270,50)
     
     while paused:
         BLACK = (0, 0, 0)
@@ -180,8 +180,8 @@ def pause():
         #backsurf = pygame.Surface((640, 400))
         #pause_font = pygame.font.Font("font/Dk Pundak.otf", 34)
         #pause_surf = pause_font.render("PAUSE!!!", True, BLACK)
-        pop = pygame.image.load("others/nextlevel.png")
-        screen.blit(pop, (180,-13))
+        pop = pygame.image.load("others/pause_board.png")
+        screen.blit(pop, (180,-1))
         #screen.blit(pause_surf, (270, 35))
         pausesg.add(a_pauses)
         pausesg.draw(screen)
