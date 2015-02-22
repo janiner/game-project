@@ -1,5 +1,5 @@
 import pygame, sys, random, glob
-from cutscenes import *
+
 
 def about(screen):
     screen = pygame.display.set_mode((640, 400))
@@ -10,9 +10,4 @@ def about(screen):
     
     
    # pygame.display.flip()
-    
-def help(screen):
-    cutscene(screen, ["EM's RUSH",
-    "",
-    "Move: Arrow Keys",
-    "Jump: Space bar"])          
+           
