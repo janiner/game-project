@@ -208,9 +208,9 @@ def pause():
         sounds=pygame.sprite.Group()
         a_sound=Sound()
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+            #if event.type == pygame.QUIT:
+             #   pygame.quit()
+              #  quit()
 
             #if event.type == pygame.KEYDOWN:
              #   if event.key == pygame.K_c:
@@ -268,9 +268,20 @@ def pause():
     
     
 def gameover():
+    retry=pygame.sprite.Group()
+    a_retry=reloadb()
+    a_retry.set_image("others/retry.png")
+    a_retry.set_position(207,150)
+
+    menu=pygame.sprite.Group()
+    a_menu=back()
+    a_menu.set_image("others/menu.png")
+    a_menu.set_position(340,150)
+    
     RED = (255, 0, 0)
     WHITE = (255,255,255)
     go = pygame.image.load("others/gameover.png")
+    
     #backsurf = pygame.Surface((640, 400))
     #backsurf.blit(go, (0,0))            
     #screen.blit(backsurf, (0,0))
@@ -284,9 +295,61 @@ def gameover():
     #block = {'rect':pygame.Rect(200, 80, 230, 250),'color':WHITE}
     #pygame.draw.rect(screen, block['color'], block['rect'])
     #screen.blit(text_appear,(230,100))
-    screen.blit(go, (180,0))
-   
+    screen.blit(go, (150,10))
 
+    
+    menu.add(a_menu)
+    menu.draw(screen)
+
+    retry.add(a_retry)
+    retry.draw(screen)
+
+    sounds=pygame.sprite.Group()
+    a_sound=Sound()
+    a_sound.stopsound()
+    
+    for event in pygame.event.get():
+        if (event.type ==pygame.MOUSEBUTTONDOWN):
+            if(event.pos[0] < a_retry.rect.x+88 and event.pos[1]>a_retry.rect.y and event.pos[0]>a_retry.rect.x and event.pos[1]<a_retry.rect.y+195):
+                main()
+            if(event.pos[0] < a_menu.rect.x+150 and event.pos[1]>a_menu.rect.y and event.pos[0]>a_menu.rect.x and event.pos[1]<a_menu.rect.y+40):
+                from os.path import dirname,join
+                here = dirname('main.py')
+                scr = pygame.display.set_mode((640,400))
+                icon = pygame.image.load('logo/icon.png')
+                pygame.display.set_icon(icon)
+                bg = pygame.image.load(join(here,'others/start.jpg'))
+                scr.blit(bg,bg.get_rect(center=scr.get_rect().center))
+                    #~ scr.fill(-1)
+                pygame.display.flip()
+                
+                while True:
+                    
+                    resp= slidemenu.menu(['play',
+                                         'highscore',
+                                        'help',
+                                         'quit::good bye'],
+                                         font1      = pygame.font.Font(join(here,'font/DK Pundak.otf'),25),
+                                        font2      = pygame.font.Font(join(here,'font/DK Pundak.otf'),30),
+                                         tooltipfont= pygame.font.Font(join(here,'font/DK Pundak.otf'),12),
+                                         color1     = (255,0,40),
+                                         light      = 9,
+                                         tooltiptime= 1000,
+                                         cursor_img = pygame.image.load('others/mouse.png'),
+                                         hotspot    = (38,15))
+                    if resp[0] == "play":
+                        load.Load(scr)
+                        main()
+                    if resp[0] == "highscore":
+                        load.Load(scr)
+                    if resp[0] == "help":
+                        about.about(scr)
+            
+            #display.update()
+                    if resp[0] != "re-show": break
+                print(resp)
+                quit()
+                        
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -443,32 +506,33 @@ def main():
     a_reload=reloadb()
     a_reload.set_image("others/reload.png")
     a_reload.set_position(525,10)
-    
+  
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RIGHT:
-                    direction = "rights"
+            if(lives==1):
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RIGHT:
+                        direction = "rights"
                     
-                if event.key == pygame.K_LEFT:
-                    direction = "left"
-                if lovely.jump != "up" or lovely.jump != "down":
-                    if event.key == pygame.K_SPACE:
-                        pygame.mixer.music.load('sounds-temporary/jump.mp3')
-                        pygame.mixer.music.play()
-                        if lovely.jump_number < 2:
-                            lovely.jump = "up"
-                            lovely.jump_number += 1
+                    if event.key == pygame.K_LEFT:
+                        direction = "left"
+                    if lovely.jump != "up" or lovely.jump != "down":
+                        if event.key == pygame.K_SPACE:
+                            pygame.mixer.music.load('sounds-temporary/jump.mp3')
+                            pygame.mixer.music.play()
+                            if lovely.jump_number < 2:
+                                lovely.jump = "up"
+                                lovely.jump_number += 1
                 #if event.key == pygame.K_p:
                  #   pause()
             #music = pygame.mixer.Sound("sounds-temporay/jum.mp3")
             #pygame.mixer.music.load('sounds-temporary/rush.wav')
             #pygame.mixer.music.play()
             #music.play()
-            ppp=0
+            #ppp=0
             #if (event.type==pygame.MOUSEMOTION):
                 #if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
                 #mouse= pygame.mouse.get_pos()
@@ -477,28 +541,28 @@ def main():
                     #pp=pygame.transform.scale(pb,(50,50))
                     #screen.blit(pp,(10,10))
                 #print(mouse)
-            if (event.type ==pygame.MOUSEBUTTONDOWN):
-                if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
-                    a_sound.stopsound()
-                    pause()
+                if (event.type ==pygame.MOUSEBUTTONDOWN):
+                    if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
+                        a_sound.stopsound()
+                        pause()
                     
                         #paused=False
                 #else:
                   #  if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
                  #       paused=False
-                if(event.pos[0] < a_back.rect.x+570  and event.pos[1]>a_back.rect.y and event.pos[0]>a_back.rect.x and event.pos[1]<a_back.rect.y+570):                    
-                    from os.path import dirname,join
-                    here = dirname('main.py')
-                    scr = pygame.display.set_mode((640,400))
-                    icon = pygame.image.load('logo/icon.png')
-                    pygame.display.set_icon(icon)
-                    bg = pygame.image.load(join(here,'others/start.jpg'))
-                    scr.blit(bg,bg.get_rect(center=scr.get_rect().center))
+                    if(event.pos[0] < a_back.rect.x+570  and event.pos[1]>a_back.rect.y and event.pos[0]>a_back.rect.x and event.pos[1]<a_back.rect.y+570):                    
+                        from os.path import dirname,join
+                        here = dirname('main.py')
+                        scr = pygame.display.set_mode((640,400))
+                        icon = pygame.image.load('logo/icon.png')
+                        pygame.display.set_icon(icon)
+                        bg = pygame.image.load(join(here,'others/start.jpg'))
+                        scr.blit(bg,bg.get_rect(center=scr.get_rect().center))
                     #~ scr.fill(-1)
-                    pygame.display.flip()
-                    a_sound.stopsound()
-                    while True:
-                        resp= slidemenu.menu(['play',
+                        pygame.display.flip()
+                        a_sound.stopsound()
+                        while True:
+                            resp= slidemenu.menu(['play',
                                          'highscore',
                                         'help',
                                          'quit::good bye'],
@@ -510,37 +574,37 @@ def main():
                                          tooltiptime= 1000,
                                          cursor_img = pygame.image.load('others/mouse.png'),
                                          hotspot    = (38,15))
-                        if resp[0] == "play":
-                            load.Load(scr)
-                            main()
-                        if resp[0] == "highscore":
-                            load.Load(scr)
-                        if resp[0] == "help":
-                            about.about(scr)
+                            if resp[0] == "play":
+                                load.Load(scr)
+                                main()
+                            if resp[0] == "highscore":
+                                load.Load(scr)
+                            if resp[0] == "help":
+                                about.about(scr)
             
             #display.update()
-                        if resp[0] != "re-show": break
-                    print(resp)
-                    quit()
+                            if resp[0] != "re-show": break
+                        print(resp)
+                        quit()
                     
-                if(event.pos[0] < a_reload.rect.x+510  and event.pos[1]>a_reload.rect.y and event.pos[0]>a_reload.rect.x and event.pos[1]<a_reload.rect.y+510):
-                    a_sound.stopsound()
-                    main()
-                    
-                    
-                if soundss==0:
-                    if(event.pos[0] < a_sound.rect.x+50  and event.pos[1]>a_sound.rect.y and event.pos[0]>a_sound.rect.x and event.pos[1]<a_sound.rect.y+50):
-                        a_sound.set_image("others/soundOff.png")
-                        a_sound.set_position(65,10)
+                    if(event.pos[0] < a_reload.rect.x+510  and event.pos[1]>a_reload.rect.y and event.pos[0]>a_reload.rect.x and event.pos[1]<a_reload.rect.y+510):
                         a_sound.stopsound()
-                        soundss=1
+                        main()
+                    
+                    
+                    if soundss==0:
+                        if(event.pos[0] < a_sound.rect.x+50  and event.pos[1]>a_sound.rect.y and event.pos[0]>a_sound.rect.x and event.pos[1]<a_sound.rect.y+50):
+                            a_sound.set_image("others/soundOff.png")
+                            a_sound.set_position(65,10)
+                            a_sound.stopsound()
+                            soundss=1
                        
-                else:
-                    if(event.pos[0] < a_sound.rect.x+50  and event.pos[1]>a_sound.rect.y and event.pos[0]>a_sound.rect.x and event.pos[1]<a_sound.rect.y+50):
-                        a_sound.set_image("others/soundOn.png")
-                        a_sound.set_position(65,10)
-                        a_sound.playsound()
-                        soundss=0
+                    else:
+                        if(event.pos[0] < a_sound.rect.x+50  and event.pos[1]>a_sound.rect.y and event.pos[0]>a_sound.rect.x and event.pos[1]<a_sound.rect.y+50):
+                            a_sound.set_image("others/soundOn.png")
+                            a_sound.set_position(65,10)
+                            a_sound.playsound()
+                            soundss=0
                     
                     #if(event.pos[0] < a_sound.rect.x+50  and event.pos[1]>a_sound.rect.y and event.pos[0]>a_sound.rect.x and event.pos[1]<a_sound.rect.y+50):
 #                        a_sound.set_image("others/soundOn.png")
@@ -549,12 +613,12 @@ def main():
                 #if(event.pos[0] < a_sound.rect.x+50  and event.pos[1]>a_sound.rect.y and event.pos[0]>a_sound.rect.x and event.pos[1]<a_sound.rect.y+50):
                  #   print('sound')
                     
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_RIGHT:
-                    direction = "right"
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_RIGHT:
+                        direction = "right"
                     
-                if event.key == pygame.K_LEFT:
-                    direction = "left"
+                    if event.key == pygame.K_LEFT:
+                        direction = "left"
                     
             #if (event.type==pygame.MOUSEMOTION):
              #   mouse= pygame.mouse.get_pos()
@@ -568,20 +632,24 @@ def main():
                 #if(event.pos[0] < a_sound.rect.x+50  and event.pos[1]>a_sound.rect.y and event.pos[0]>a_sound.rect.x and event.pos[1]<a_sound.rect.y+50):
                     
                     
-            if (event.type ==pygame.MOUSEBUTTONUP):
-                mouse = pygame.mouse.get_pos()
-                if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
-                    paused=True
+                if (event.type ==pygame.MOUSEBUTTONUP):
+                    mouse = pygame.mouse.get_pos()
+                    if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
+                        paused=True
                     
         if x > max_x:
             gameOver = True
+            lives= 0
+
         if gameOver:
             #nextScreen = nextLevel()
             #screen.blit(nextScreen, (0, 0))
             #coin_group.remove(coin)
+            a_sound.stopsound()
             gameover()
             print ('f')
-        elif not gameOver:
+        
+        if not gameOver:
 
             
             x = scroll(x, direction)
@@ -643,8 +711,9 @@ def main():
                 lives=lives-1
                 if (lives==0):
             #print("collision")
-                    print("gg")
-                    #gameOver = True
+                    #print("gg")
+                   #a_sound.stopsound()
+                    gameOver = True
                     
             
             for coin in coin_group:
@@ -673,6 +742,8 @@ def main():
                 #    print('gg')
             text = font.render("Score: %s" %(coins), 1, (10,15,30))
             screen.blit(text, (250,20))
+
+            
 
             #if obstacles_spawn_delay > 0:
              #   obstacles_spawn_delay -= 1
