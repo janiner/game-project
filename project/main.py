@@ -10,6 +10,8 @@ try: import GetEvent
 except: from . import GetEvent
 
 
+
+
 screen = pygame.display.set_mode((640, 400))
 clock = pygame.time.Clock()
 pygame.display.set_caption("EM'S RUSH")
@@ -26,7 +28,7 @@ def scroll(x, direction):
         x = x + 1
 
     elif direction =="rights":
-        x=x+4
+        x=x+3
     return (x)
 
 
@@ -171,20 +173,40 @@ def pause():
     pausesg=pygame.sprite.Group()
     a_pauses=Pauseb()
     a_pauses.set_image("others/resume.png")
-    a_pauses.set_position(270,50)
+    a_pauses.set_position(270,55)
+
+    reloadbut=pygame.sprite.Group()
+    a_reloads=reloadb()
+    a_reloads.set_image("others/retry.png")
+    a_reloads.set_position(270,85)
+
+    backbut=pygame.sprite.Group()
+    a_backs=back()
+    a_backs.set_image("others/menu.png")
+    a_backs.set_position(270,130)
+
+    
+    
     
     while paused:
+        
         BLACK = (0, 0, 0)
         WHITE = (255,255,255)
         RED = (255, 0, 0)
-        #backsurf = pygame.Surface((640, 400))
-        #pause_font = pygame.font.Font("font/Dk Pundak.otf", 34)
-        #pause_surf = pause_font.render("PAUSE!!!", True, BLACK)
         pop = pygame.image.load("others/pause_board.png")
         screen.blit(pop, (180,-1))
-        #screen.blit(pause_surf, (270, 35))
+        
         pausesg.add(a_pauses)
         pausesg.draw(screen)
+
+        reloadbut.add(a_reloads)
+        reloadbut.draw(screen)
+
+        backbut.add(a_backs)
+        backbut.draw(screen)
+        
+        sounds=pygame.sprite.Group()
+        a_sound=Sound()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -194,14 +216,53 @@ def pause():
              #   if event.key == pygame.K_c:
               #    paused = False
             
-            a_pause=Pauseb()
+            #if (event.type==pygame.MOUSEMOTION):
+             #   mouse= pygame.mouse.get_pos()
+              #  print(mouse)
+               # print(a_reloads.rect.y)
             if (event.type ==pygame.MOUSEBUTTONDOWN):
-                if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
+                if(event.pos[0] < a_pauses.rect.x+105 and event.pos[1]>a_pauses.rect.y and event.pos[0]>a_pauses.rect.x and event.pos[1]<a_pauses.rect.y+30):
                     paused=False
-
-                #elif event.key == pygame.K_q:
-                 #   pygame.quit()
-                  #  quit()
+                if(event.pos[0] < a_reloads.rect.x+90  and event.pos[1]>a_reloads.rect.y and event.pos[0]>a_reloads.rect.x and event.pos[1]<a_reloads.rect.y+45):
+                    load.Load(screen)
+                    main()
+                if(event.pos[0] < a_backs.rect.x+90  and event.pos[1]>a_backs.rect.y and event.pos[0]>a_backs.rect.x+5 and event.pos[1]<a_backs.rect.y+45):
+                    from os.path import dirname,join
+                    here = dirname('main.py')
+                    scr = pygame.display.set_mode((640,400))
+                    icon = pygame.image.load('logo/icon.png')
+                    pygame.display.set_icon(icon)
+                    bg = pygame.image.load(join(here,'others/start.jpg'))
+                    scr.blit(bg,bg.get_rect(center=scr.get_rect().center))
+                    #~ scr.fill(-1)
+                    pygame.display.flip()
+                    a_sound.stopsound()
+                    while True:
+                        resp= slidemenu.menu(['play',
+                                         'highscore',
+                                        'help',
+                                         'quit::good bye'],
+                                         font1      = pygame.font.Font(join(here,'font/DK Pundak.otf'),25),
+                                        font2      = pygame.font.Font(join(here,'font/DK Pundak.otf'),30),
+                                         tooltipfont= pygame.font.Font(join(here,'font/DK Pundak.otf'),12),
+                                         color1     = (255,0,40),
+                                         light      = 9,
+                                         tooltiptime= 1000,
+                                         cursor_img = pygame.image.load('others/mouse.png'),
+                                         hotspot    = (38,15))
+                        if resp[0] == "play":
+                            load.Load(scr)
+                            main()
+                        if resp[0] == "highscore":
+                            load.Load(scr)
+                        if resp[0] == "help":
+                            about.about(scr)
+            
+            #display.update()
+                        if resp[0] != "re-show": break
+                    print(resp)
+                    quit()
+                    
         pygame.display.update()
         clock.tick(5)
     
@@ -358,7 +419,12 @@ def main():
     pavement = load_pavement(pavement)
 
 
-    
+    sounds=pygame.sprite.Group()
+    a_sound=Sound()
+    a_sound.set_image("others/soundOn.png")
+    a_sound.set_position(65,10)
+    a_sound.playsound()
+    soundss=0
 
     pauseg=pygame.sprite.Group()
     a_pause=Pauseb()
@@ -366,12 +432,7 @@ def main():
     a_pause.set_position(10,10)
     paused =False
 
-    sounds=pygame.sprite.Group()
-    a_sound=Sound()
-    a_sound.set_image("others/soundOn.png")
-    a_sound.set_position(65,10)
-    a_sound.playsound()
-    soundss=0
+    
     
     backb=pygame.sprite.Group()
     a_back=back()
@@ -410,14 +471,15 @@ def main():
             ppp=0
             #if (event.type==pygame.MOUSEMOTION):
                 #if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
-                    #mouse= pygame.mouse.get_pos()
+                #mouse= pygame.mouse.get_pos()
                     #pb=pygame.image.load("others/pause.png")
                     #pauser=pb.get_rect()
                     #pp=pygame.transform.scale(pb,(50,50))
                     #screen.blit(pp,(10,10))
-                    
+                #print(mouse)
             if (event.type ==pygame.MOUSEBUTTONDOWN):
                 if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
+                    a_sound.stopsound()
                     pause()
                     
                         #paused=False
@@ -581,8 +643,8 @@ def main():
                 lives=lives-1
                 if (lives==0):
             #print("collision")
-                    
-                    gameOver = True
+                    print("gg")
+                    #gameOver = True
                     
             
             for coin in coin_group:
