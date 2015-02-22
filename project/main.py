@@ -170,8 +170,8 @@ def pause():
     paused = True
     pausesg=pygame.sprite.Group()
     a_pauses=Pauseb()
-    a_pauses.set_image("others/pause.png")
-    a_pauses.set_position(270,10)
+    a_pauses.set_image("others/resume.png")
+    a_pauses.set_position(270,25)
     
     while paused:
         BLACK = (0, 0, 0)
