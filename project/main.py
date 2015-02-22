@@ -229,11 +229,11 @@ def gameover():
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.img_position = 2
+        self.img_position = 16
         self.img_list = glob.glob("img/l*.png")
         self.image = pygame.image.load(self.img_list[self.img_position])
         self.rect = self.image.get_rect()
-        self.rect.top = 200
+        self.rect.top = 191
         self.rect.left = 120
         self.jump = "stop"
         self.jump_number = 0
@@ -267,7 +267,7 @@ def jump_update(y, jump, number):
             jump = "down"
     if jump == "down" and y >= 140:
         jump = "stop"
-        y = 200
+        y = 191
         number = 0
     if jump == "up":
         y = y - jump_speed
@@ -547,7 +547,7 @@ def main():
     
             lovely.rect.top, lovely.jump, lovely.jump_number = jump_update(lovely.rect.top, lovely.jump, lovely.jump_number)
             screen.blit(lovely.image, lovely.rect)
-            if lovely.img_position < 2:
+            if lovely.img_position < 16:
                 lovely.img_position += 1
             else:
                 lovely.img_position = 0
