@@ -105,6 +105,8 @@ class Sound(pygame.sprite.Sprite):
     def stopsound(self):
         self.sound.stop()
 
+    
+
 class back(pygame.sprite.Sprite):
     blue = (0, 0, 255)
     def __init__(self,color= blue, width=60, height=60):
@@ -166,29 +168,50 @@ def nextLevel():
     surface.blit(congrats, (50, 50))
     surface.blit(level_surface, (50, 200))
     return (surface)
-        
+
+def savescore(score):
+    highscorefile=open("highscore.txt", "w")
+    highscorefile.write(str(score))
+    highscorefile.close()
+
+def getscore():
+    highscore=0
+
+    highscorefile=open("highscore.txt", "r")
+    highscore=int(highscorefile.read())
+    #print(highscore)
+    highscorefile.close()
+
+    return highscore
+
+    
 def pause():
     
     paused = True
     pausesg=pygame.sprite.Group()
     a_pauses=Pauseb()
     a_pauses.set_image("others/resume.png")
-    a_pauses.set_position(270,55)
+    a_pauses.set_position(270,60)
 
     reloadbut=pygame.sprite.Group()
     a_reloads=reloadb()
     a_reloads.set_image("others/retry.png")
-    a_reloads.set_position(270,85)
+    a_reloads.set_position(270,100)
 
     backbut=pygame.sprite.Group()
     a_backs=back()
     a_backs.set_image("others/menu.png")
-    a_backs.set_position(270,130)
+    a_backs.set_position(270,140)
 
+    sounds=pygame.sprite.Group()
+    a_sound=Sound()
+    
+    
     
     
     
     while paused:
+        a_sound.stopsound()
         
         BLACK = (0, 0, 0)
         WHITE = (255,255,255)
@@ -205,8 +228,8 @@ def pause():
         backbut.add(a_backs)
         backbut.draw(screen)
         
-        sounds=pygame.sprite.Group()
-        a_sound=Sound()
+        
+        
         for event in pygame.event.get():
             #if event.type == pygame.QUIT:
              #   pygame.quit()
@@ -221,10 +244,13 @@ def pause():
               #  print(mouse)
                # print(a_reloads.rect.y)
             if (event.type ==pygame.MOUSEBUTTONDOWN):
-                if(event.pos[0] < a_pauses.rect.x+105 and event.pos[1]>a_pauses.rect.y and event.pos[0]>a_pauses.rect.x and event.pos[1]<a_pauses.rect.y+30):
+                if(event.pos[0] < a_pauses.rect.x+100 and event.pos[1]>a_pauses.rect.y and event.pos[0]>a_pauses.rect.x and event.pos[1]<a_pauses.rect.y+32):
+                    #a_sound.playsound()
                     paused=False
-                if(event.pos[0] < a_reloads.rect.x+90  and event.pos[1]>a_reloads.rect.y and event.pos[0]>a_reloads.rect.x and event.pos[1]<a_reloads.rect.y+45):
+                    
+                if(event.pos[0] < a_reloads.rect.x+100  and event.pos[1]>a_reloads.rect.y and event.pos[0]>a_reloads.rect.x and event.pos[1]<a_reloads.rect.y+31):
                     load.Load(screen)
+                    a_sound.stopsound()
                     main()
                 if(event.pos[0] < a_backs.rect.x+90  and event.pos[1]>a_backs.rect.y and event.pos[0]>a_backs.rect.x+5 and event.pos[1]<a_backs.rect.y+45):
                     from os.path import dirname,join
@@ -257,7 +283,8 @@ def pause():
                             load.Load(scr)
                         if resp[0] == "help":
                             about.about(scr)
-            
+                        #if resp[0]=="quit":
+                         #   quit()
             #display.update()
                         if resp[0] != "re-show": break
                     print(resp)
@@ -281,6 +308,9 @@ def gameover():
     RED = (255, 0, 0)
     WHITE = (255,255,255)
     go = pygame.image.load("others/gameover.png")
+
+    
+    
     
     #backsurf = pygame.Surface((640, 400))
     #backsurf.blit(go, (0,0))            
@@ -307,12 +337,18 @@ def gameover():
     sounds=pygame.sprite.Group()
     a_sound=Sound()
     a_sound.stopsound()
+
+    font = pygame.font.Font("font/DK Pundak.otf", 30)
+    highscore= getscore()
+    text = font.render("your score: %s" %(highscore), 1, (10,15,30))
+    screen.blit(text, (230,100))
     
     for event in pygame.event.get():
         if (event.type ==pygame.MOUSEBUTTONDOWN):
             if(event.pos[0] < a_retry.rect.x+88 and event.pos[1]>a_retry.rect.y and event.pos[0]>a_retry.rect.x and event.pos[1]<a_retry.rect.y+195):
+                a_sound.stopsound()
                 main()
-            if(event.pos[0] < a_menu.rect.x+150 and event.pos[1]>a_menu.rect.y and event.pos[0]>a_menu.rect.x and event.pos[1]<a_menu.rect.y+40):
+            if(event.pos[0] < a_menu.rect.x+100 and event.pos[1]>a_menu.rect.y and event.pos[0]>a_menu.rect.x and event.pos[1]<a_menu.rect.y+33):
                 from os.path import dirname,join
                 here = dirname('main.py')
                 scr = pygame.display.set_mode((640,400))
@@ -322,6 +358,7 @@ def gameover():
                 scr.blit(bg,bg.get_rect(center=scr.get_rect().center))
                     #~ scr.fill(-1)
                 pygame.display.flip()
+                a_sound.stopsound()
                 
                 while True:
                     
@@ -488,6 +525,7 @@ def main():
     a_sound.set_position(65,10)
     a_sound.playsound()
     soundss=0
+    
 
     pauseg=pygame.sprite.Group()
     a_pause=Pauseb()
@@ -545,6 +583,7 @@ def main():
                     if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
                         a_sound.stopsound()
                         pause()
+                        a_sound.playsound()
                     
                         #paused=False
                 #else:
@@ -635,8 +674,13 @@ def main():
                 if (event.type ==pygame.MOUSEBUTTONUP):
                     mouse = pygame.mouse.get_pos()
                     if(event.pos[0] < a_pause.rect.x+40  and event.pos[1]>a_pause.rect.y and event.pos[0]>a_pause.rect.x and event.pos[1]<a_pause.rect.y+40):
+                        a_sound.stopsound()
                         paused=True
-                    
+        #if lives==1:
+            #a_sound.playsound()
+         #   print('1')
+                        
+                            
         if x > max_x:
             gameOver = True
             lives= 0
@@ -647,11 +691,11 @@ def main():
             #coin_group.remove(coin)
             a_sound.stopsound()
             gameover()
-            print ('f')
+            #print ('f')
         
         if not gameOver:
 
-            
+            #a_sound.playsound()
             x = scroll(x, direction)
             backsurf.blit(background, (0,0), (x, 0, 640 + x, 420))            
             screen.blit(backsurf, (0,0))
@@ -711,7 +755,7 @@ def main():
                 lives=lives-1
                 if (lives==0):
             #print("collision")
-                    #print("gg")
+                    print("gg")
                    #a_sound.stopsound()
                     gameOver = True
                     
@@ -742,6 +786,7 @@ def main():
                 #    print('gg')
             text = font.render("Score: %s" %(coins), 1, (10,15,30))
             screen.blit(text, (250,20))
+            savescore(coins)
 
             
 
