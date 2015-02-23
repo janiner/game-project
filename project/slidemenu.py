@@ -12,6 +12,7 @@ except: from . import GetEvent
 import load
 import main
 import about
+import highscore
 import pygame, sys, random, glob
 
 
@@ -355,7 +356,7 @@ if __name__ == '__main__':
             load.Load(scr)
             main.main()
         if resp[0] == "highscore":
-            load.Load(scr)
+            highscore.score(scr)
         if resp[0] == "help":
             abouts = pygame.image.load('obstacles/poop.png')
             scr.blit(abouts, (50,10))
