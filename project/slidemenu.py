@@ -15,6 +15,30 @@ import about
 import highscore
 import pygame, sys, random, glob
 
+class Sound(pygame.sprite.Sprite):
+    blue = (0, 0, 255)
+    def __init__(self,color= blue, width=60, height=60):
+        super(Sound, self).__init__()
+        self.image = pygame.Surface((width,height))
+        self.image.fill(color)
+        self.rect=self.image.get_rect()
+
+        self.sound = pygame.mixer.Sound("sounds/[Background.wav")
+
+    def playsound(self):
+        self.sound.play(-1)
+
+    def set_position(self,x,y):
+        self.rect.x=x
+        self.rect.y=y
+
+    def set_image(self,filename=None):
+        if (filename!=None):
+            self.image=pygame.image.load(filename)
+            self.rect=self.image.get_rect()
+
+    def stopsound(self):
+        self.sound.stop()
 
 def menu(
          menu,                          # iterable of str as ("item",) or ("item::tooltip",)
@@ -323,10 +347,13 @@ def menu(
     mouse.set_visible(was_visible)
     return ret
 
+
 if __name__ == '__main__':
     from os.path import dirname,join
     here = dirname('main.py')
     scr = display.set_mode((640,400))
+    sounds=pygame.sprite.Group()
+    a_sound=Sound()
     #load.Credits(scr)
     icon = pygame.image.load('logo/icon.png')
     pygame.display.set_icon(icon)
@@ -338,7 +365,7 @@ if __name__ == '__main__':
     display.flip();print(menu.__doc__)
     while True:
         
-        
+        a_sound.playsound()
         resp = menu(['play',
                      'highscore',
                      'help',
@@ -354,12 +381,11 @@ if __name__ == '__main__':
         
         if resp[0] == "play":
             load.Load(scr)
+            a_sound.stopsound()
             main.main()
         if resp[0] == "highscore":
             highscore.score(scr)
         if resp[0] == "help":
-            abouts = pygame.image.load('obstacles/poop.png')
-            scr.blit(abouts, (50,10))
             about.about(scr)
             
             #display.update()

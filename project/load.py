@@ -4,6 +4,8 @@ from pygame.locals import *
 pygame.init()
 
 def Load(screen):
+    icon = pygame.image.load('logo/icon.png')
+    pygame.display.set_icon(icon)
     WHITE = (255, 255, 255)
     ORANGE = (255, 103, 1)
     BLUE = (0, 0, 255)
@@ -18,10 +20,13 @@ def Load(screen):
     screen.blit(text, textRect)
     pygame.display.update()
 
+
 def Credits(screen):
     num = 0
     WHITE = (255, 255, 255)
     RED = (255, 0, 0)
+    color1     = (255,128,128)
+    color2 = (255,0,40)
     screen.fill(WHITE)
     icon = pygame.image.load('logo/logo.png')
     rect = icon.get_rect()
@@ -33,8 +38,8 @@ def Credits(screen):
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-        comicFont = pygame.font.Font('font/DK Pundak.otf', 40)
-        text = comicFont.render('CREATED BY LOVELY JAM', True, RED, WHITE)
+        comicFont = pygame.font.Font('font/DK Pundak.otf', 25)
+        text = comicFont.render('created by LOVELY JAM', True, color1, WHITE)
         textRect = text.get_rect()
         textRect.centerx = screen.get_rect().centerx
         textRect.centery = screen.get_rect().centery + 150
