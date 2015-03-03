@@ -353,7 +353,7 @@ if __name__ == '__main__':
     here = dirname('main.py')
     scr = display.set_mode((640,400))
     sounds=pygame.sprite.Group()
-    a_sound=Sound()
+    a_soundmenu=Sound()
     #load.Credits(scr)
     icon = pygame.image.load('logo/icon.png')
     pygame.display.set_icon(icon)
@@ -365,7 +365,7 @@ if __name__ == '__main__':
     display.flip();print(menu.__doc__)
     while True:
         
-        a_sound.playsound()
+        a_soundmenu.playsound()
         resp = menu(['play',
                      'highscore',
                      'help',
@@ -381,7 +381,7 @@ if __name__ == '__main__':
         
         if resp[0] == "play":
             load.Load(scr)
-            a_sound.stopsound()
+            a_soundmenu.stopsound()
             main.main()
         if resp[0] == "highscore":
             highscore.score(scr)

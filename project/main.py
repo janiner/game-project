@@ -50,13 +50,15 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect.left = 480
 
     def update(self):
-        self.rect.left -= 13
+        self.rect.left -= 8
+
+        
 class Obstacles(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("obstacles/poop.png")
         self.rect = self.image.get_rect()
-        self.rect.bottom = 100
+        self.rect.bottom = 390
         self.rect.left = 480
 
     def update(self):
@@ -88,7 +90,7 @@ class Sound(pygame.sprite.Sprite):
         self.image.fill(color)
         self.rect=self.image.get_rect()
 
-        self.sound = pygame.mixer.Sound("sounds/game.wav")
+        self.sound = pygame.mixer.Sound("sounds/rush.wav")
 
     def playsound(self):
         self.sound.play(-1)
@@ -105,7 +107,16 @@ class Sound(pygame.sprite.Sprite):
     def stopsound(self):
         self.sound.stop()
 
-    
+        
+class Dogdog(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.img_position = 0
+        self.img_list = glob.glob("obstacles/dogdog*.png")
+        self.image = pygame.image.load(self.img_list[self.img_position])
+        self.rect = self.image.get_rect()
+        self.rect.top = 260
+        self.rect.left = 1    
 
 class back(pygame.sprite.Sprite):
     blue = (0, 0, 255)
@@ -425,6 +436,8 @@ class Player(pygame.sprite.Sprite):
         self.jump = "stop"
         self.jump_number = 0
 
+        
+
 class Players(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -441,7 +454,7 @@ class Players(pygame.sprite.Sprite):
 class Playerjump(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.img_position = 16
+        self.img_position = 0
         
         self.image = pygame.image.load("img/l015.png")
         self.rect = self.image.get_rect()
@@ -470,7 +483,7 @@ def jump_update(y, jump, number):
         if jump == "up" and y < 50:
             jump = "down"
     elif number == 2:
-        if jump == "up" and y < -10:
+        if jump == "up" and y < 10:
             jump = "down"
     if jump == "down" and y >= 140:
         jump = "stop"
@@ -526,7 +539,7 @@ def main():
     max_x = back_rect.right - 600
     backsurf = pygame.Surface((640, 400))
 
-    background2 = pygame.image.load("background/2bg.png")
+    background2 = pygame.image.load("background/2bg.jpg")
     back_rect = background.get_rect()
 
     go = pygame.image.load("others/gameover.png")
@@ -542,10 +555,18 @@ def main():
     innerLovely = innerPlayer()
     innerLoves = innerPlayers()
 
+    dogrun=Dogdog()
+    innerdog=innerPlayer()
+
+    #dog= Dog()
+    #doggroup= pygame.sprite.Group()
+    #doggroup.add(dog)
+    #dogdelay=10
+    
     poop = Obstacle()
     obstacle_group = pygame.sprite.Group()
     obstacle_group.add(poop)
-    obstacle_spawn_delay = 10
+    obstacle_spawn_delay = 30
 
     poops = Obstacles()
     obstacles_group = pygame.sprite.Group()
@@ -586,7 +607,7 @@ def main():
     a_pause.set_image("others/pause.png")
     a_pause.set_position(10,10)
     paused =False
-
+    i=0
     
     
     backb=pygame.sprite.Group()
@@ -620,6 +641,9 @@ def main():
                             if lovely.jump_number < 2:
                                 lovely.jump = "up"
                                 lovely.jump_number += 1
+                            if lovely.jump_number > 2:
+                                lovely.jump = "up"
+                                lovely.jump_number += 1.8
                 #if event.key == pygame.K_p:
                  #   pause()
             #music = pygame.mixer.Sound("sounds-temporay/jum.mp3")
@@ -742,7 +766,7 @@ def main():
         if x > max_x:
             x=0
             x = scroll(x, direction)
-            backsurf.blit(background, (0,0), (x, 0, 640 + x, 420))            
+            backsurf.blit(background2, (0,0), (x, 0, 640 + x, 420))            
             screen.blit(backsurf, (0,0))
             #gameOver = True
             #lives= 0
@@ -766,9 +790,7 @@ def main():
             backsurf.blit(background, (0,0), (x, 0, 640 + x, 420))            
             screen.blit(backsurf, (0,0))
 
-            x = scroll(x, direction)
-            backsurf.blit(background, (0,0), (x, 0, 640 + x, 420))            
-            screen.blit(backsurf, (0,0))
+            
 
             pauseg.add(a_pause)
             pauseg.draw(screen)
@@ -809,7 +831,7 @@ def main():
                 obstacle_spawn_delay -= 1
             else:
                 obstacle_group.add(Obstacle())
-                obstacle_spawn_delay = random.randrange(40, 100, 10)
+                obstacle_spawn_delay = random.randrange(50, 150, 5)
             obstacle_group.update()
             obstacle_group.draw(screen)
             
@@ -817,20 +839,50 @@ def main():
             if pygame.sprite.spritecollideany(innerLovely, obstacle_group):
                 lives=lives-1
                 if (lives==0):
-            #print("collision")
-                    print("gg")
-                   #a_sound.stopsound()
-                    #gameOver = True
-
-
-            innerLoves.rect.center = loves.rect.center
-            if pygame.sprite.spritecollideany(innerLoves, obstacle_group):
-                lives=lives-1
-                if (lives==0):
-            #print("collision")
+                    
                    #a_sound.stopsound()
                     gameOver = True
-                    
+            i+=1
+            if coins==5 or coins==8 or coins==14 or coins==20:
+                lovely.rect.left=120
+            
+                screen.blit(dogrun.image, dogrun.rect)
+                if dogrun.img_position < 6:
+                    dogrun.img_position += 1
+                    dogrun.rect.left+=1
+                else:
+                    dogrun.rect.left+=1
+                    dogrun.img_position = 0
+            
+                dogrun.image = pygame.image.load(dogrun.img_list[dogrun.img_position])
+
+                if i>0:
+                    dogrun.rect.left+=1
+                    i=0
+                else:
+                    dogrun.rect.left-=1
+                innerLovely.rect.left = lovely.rect.left
+                innerdog.rect.center = dogrun.rect.center
+                if pygame.sprite.collide_rect( innerLovely, innerdog):
+#            print("collision")
+                    gameOver=True
+            
+            
+            if direction=='rights':
+                i=0
+                lovely.rect.left+=1
+                dogrun.rect.left-=3
+                screen.blit(dogrun.image, dogrun.rect)
+                if dogrun.img_position < 6:
+                    dogrun.img_position += 1
+                else:
+                
+                    dogrun.img_position = 0
+            #smurf.rect.left+=1
+                dogrun.rect.left+=2
+                dogrun.image = pygame.image.load(dogrun.img_list[dogrun.img_position])
+
+
             
             for coin in coin_group:
                 if coin.rect.right < 0:
@@ -847,7 +899,25 @@ def main():
 
             innerLovely.rect.center = lovely.rect.center
 
-
+            #for obstacles in obstacles_group:
+             #   if obstacles.rect.right < 0:
+              #      obstacle_group.remove(obstacle)
+            #if obstacles_spawn_delay > 0:
+             #   obstacles_spawn_delay -= 1
+            #else:
+             #   obstacles_group.add(Obstacles())
+              #  obstacles_spawn_delay = random.randrange(50, 100, 10)
+            #obstacles_group.update()
+            #obstacles_group.draw(screen)
+            
+            #innerLoves.rect.center = loves.rect.center
+            #if pygame.sprite.spritecollideany(innerLovely, obstacles_group):
+             #   lives=lives-1
+              #  if (lives==0):
+            #print("collision")
+                   #a_sound.stopsound()
+               #     gameOver = True
+                    
             #for runrurn
             #if pygame.sprite.spritecollideany(innerLovely, coin_group):
                 #coin_group.remove(coin)
