@@ -2,6 +2,7 @@ import pygame, sys, random, glob
 import load
 import slidemenu
 import about
+import highscorepy
 
 from math import cos, radians
 import pygame, sys, random, glob
@@ -208,10 +209,25 @@ def savescore(score):
     highscorefile.write(str(score))
     highscorefile.close()
 
+def savehighscore(score):
+    highscorefile=open("highscorenew.txt", "w")
+    highscorefile.write(str(score))
+    highscorefile.close()
+
 def getscore():
     highscore=0
 
     highscorefile=open("highscore.txt", "r")
+    highscore=int(highscorefile.read())
+    #print(highscore)
+    highscorefile.close()
+
+    return highscore
+
+def gethighscore():
+    highscore=0
+
+    highscorefile=open("highscorenew.txt", "r")
     highscore=int(highscorefile.read())
     #print(highscore)
     highscorefile.close()
@@ -225,17 +241,17 @@ def pause():
     pausesg=pygame.sprite.Group()
     a_pauses=Pauseb()
     a_pauses.set_image("others/resume.png")
-    a_pauses.set_position(270,60)
+    a_pauses.set_position(270,53)
 
     reloadbut=pygame.sprite.Group()
     a_reloads=reloadb()
     a_reloads.set_image("others/retry.png")
-    a_reloads.set_position(270,100)
+    a_reloads.set_position(270,94)
 
     backbut=pygame.sprite.Group()
     a_backs=back()
     a_backs.set_image("others/menu.png")
-    a_backs.set_position(270,140)
+    a_backs.set_position(270,134)
 
     sounds=pygame.sprite.Group()
     a_sound=Sound()
@@ -317,9 +333,11 @@ def pause():
                             load.Load(scr)
                             main()
                         if resp[0] == "highscore":
-                            load.Load(scr)
+                            a_soundmenu.stopsound()
+                            highscorepy.score(scr)
                         if resp[0] == "help":
-                            about.about(scr)
+                            a_soundmenu.stopsound()
+                            about.about(screen)
                         #if resp[0]=="quit":
                          #   quit()
             #display.update()
@@ -375,6 +393,10 @@ def gameover():
     a_sound=Sound()
     a_sound.stopsound()
 
+    soundsm=pygame.sprite.Group()
+    a_soundm=Soundmenu()
+    
+
     font = pygame.font.Font("font/DK Pundak.otf", 30)
     highscore= getscore()
     text = font.render("your score: %s" %(highscore), 1, (10,15,30))
@@ -398,7 +420,7 @@ def gameover():
                 a_sound.stopsound()
                 
                 while True:
-                    
+                    a_soundm.playsound()
                     resp= slidemenu.menu(['play',
                                          'highscore',
                                         'help',
@@ -413,11 +435,14 @@ def gameover():
                                          hotspot    = (38,15))
                     if resp[0] == "play":
                         load.Load(scr)
+                        a_soundm.stopsound()
                         main()
                     if resp[0] == "highscore":
-                        load.Load(scr)
+                        a_soundm.stopsound()
+                        highscorepy.score(screen)
                     if resp[0] == "help":
-                        about.about(scr)
+                        a_soundm.stopsound()
+                        about.about(screen)
             
             #display.update()
                     if resp[0] != "re-show": break
@@ -530,6 +555,7 @@ def main():
     lovely_BLUE = (47, 164, 245)
     RED = (255, 0, 0)
     white = (255,255,255)
+    highscore=0
 
 #load.Credits(screen)
 
@@ -699,9 +725,9 @@ def main():
                                 load.Load(scr)
                                 main()
                             if resp[0] == "highscore":
-                                load.Load(scr)
+                                highscorepy.score(screen)
                             if resp[0] == "help":
-                                about.about(scr)
+                                about.about(screen)
             
             #display.update()
                             if resp[0] != "re-show": break
@@ -888,12 +914,12 @@ def main():
                 if coin.rect.right < 0:
                     coin_group.remove(coin)
                     
-            if coin_spawn_delay > 0:
-                coin_spawn_delay -= 1
+            if coin_spawn_delay > 1:
+                coin_spawn_delay -= 2
             else:
                 coin_group.add(Coin())
                 
-                coin_spawn_delay = random.randrange(50, 100, 5)
+                coin_spawn_delay = random.randrange(20, 100, 5)
             coin_group.update()
             coin_group.draw(screen)
 
@@ -959,6 +985,15 @@ def main():
             text = font.render("Score: %s" %(coins), 1, (10,15,30))
             screen.blit(text, (250,20))
             savescore(coins)
+            score=getscore()
+            scores=gethighscore()
+            if highscore==0:
+                if coins>scores:
+                    savehighscore(coins)    
+            else:
+                if coins>scores:
+                    savehighscore(coins)
+            
 
             
 
