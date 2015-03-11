@@ -10,6 +10,7 @@ from math import cos,radians
 
 try: import GetEvent
 except: from . import GetEvent
+screen = pygame.display.set_mode((640, 400))
 
 class back(pygame.sprite.Sprite):
     blue = (0, 0, 255)
@@ -53,8 +54,8 @@ class Sound(pygame.sprite.Sprite):
     def stopsound(self):
         self.sound.stop()
         
-def about(screen):
-    screen = pygame.display.set_mode((640, 400))
+def abouts(scr):
+    
     pygame.display.set_caption("EM'S RUSH")
     RED= (255, 0, 0)
     about = pygame.image.load('others/help_.png')
@@ -114,7 +115,7 @@ def about(screen):
                             highscorepy.score(scr)
                         if resp[0] == "help":
                             a_soundabout.stopsound()
-                            about(screen)
+                            abouts(screen)
             
             #display.update()
                         if resp[0] != "re-show": break

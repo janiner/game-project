@@ -91,7 +91,7 @@ class Sound(pygame.sprite.Sprite):
         self.image.fill(color)
         self.rect=self.image.get_rect()
 
-        self.sound = pygame.mixer.Sound("sounds/rush.wav")
+        self.sound = pygame.mixer.Sound("sounds/Whistling And Fun by PlayAgain.wav")
 
     def playsound(self):
         self.sound.play(-1)
@@ -108,6 +108,18 @@ class Sound(pygame.sprite.Sprite):
     def stopsound(self):
         self.sound.stop()
 
+class Soundsgo(pygame.sprite.Sprite):
+    
+    def __init__(self):
+        super(Soundsgo, self).__init__()
+
+        self.sound = pygame.mixer.Sound("sounds/Background1.wav")
+
+    def playsound(self):
+        self.sound.play(-1)
+
+    def stopsounds(self):
+        self.sound.stop()
         
 class Dogdog(pygame.sprite.Sprite):
     def __init__(self):
@@ -116,7 +128,7 @@ class Dogdog(pygame.sprite.Sprite):
         self.img_list = glob.glob("obstacles/dogdog*.png")
         self.image = pygame.image.load(self.img_list[self.img_position])
         self.rect = self.image.get_rect()
-        self.rect.top = 260
+        self.rect.top =297
         self.rect.left = 1    
 
 class back(pygame.sprite.Sprite):
@@ -165,9 +177,17 @@ class Coin(pygame.sprite.Sprite):
     def update(self):
         self.rect.left -= 11
 
-    #def erase(self):
-     #   self
+class Padyak(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("others/padyak.png")
+        self.rect = self.image.get_rect()
+        self.rect.bottom = 150
+        self.rect.left = 530
 
+    def update(self):
+        self.rect.left -= 20
+        
 class Soundmenu(pygame.sprite.Sprite):
     blue = (0, 0, 255)
     def __init__(self,color= blue, width=60, height=60):
@@ -337,7 +357,7 @@ def pause():
                             highscorepy.score(scr)
                         if resp[0] == "help":
                             a_soundmenu.stopsound()
-                            about.about(screen)
+                            about.abouts(screen)
                         #if resp[0]=="quit":
                          #   quit()
             #display.update()
@@ -350,6 +370,8 @@ def pause():
     
     
 def gameover():
+    
+    
     retry=pygame.sprite.Group()
     a_retry=reloadb()
     a_retry.set_image("others/retry.png")
@@ -365,6 +387,8 @@ def gameover():
     go = pygame.image.load("others/gameover.png")
 
     
+    soundgo=Soundsgo()
+    #soundgo.playsound()
     
     
     #backsurf = pygame.Surface((640, 400))
@@ -391,7 +415,10 @@ def gameover():
 
     sounds=pygame.sprite.Group()
     a_sound=Sound()
-    a_sound.stopsound()
+
+    soundover=pygame.sprite.Group()
+    soundgo=Soundsgo()
+    
 
     soundsm=pygame.sprite.Group()
     a_soundm=Soundmenu()
@@ -401,13 +428,20 @@ def gameover():
     highscore= getscore()
     text = font.render("your score: %s" %(highscore), 1, (10,15,30))
     screen.blit(text, (230,100))
+    #soundgo.playsound()
+    #a_soundover.playsound()
+    
+
     
     for event in pygame.event.get():
+        
         if (event.type ==pygame.MOUSEBUTTONDOWN):
+            #soundgo.stopsound()
             if(event.pos[0] < a_retry.rect.x+88 and event.pos[1]>a_retry.rect.y and event.pos[0]>a_retry.rect.x and event.pos[1]<a_retry.rect.y+195):
-                a_sound.stopsound()
+                soundgo.stopsounds()
                 main()
-            if(event.pos[0] < a_menu.rect.x+100 and event.pos[1]>a_menu.rect.y and event.pos[0]>a_menu.rect.x and event.pos[1]<a_menu.rect.y+33):
+                
+            if(event.pos[0] < a_menu.rect.x+101 and event.pos[1]>a_menu.rect.y and event.pos[0]>a_menu.rect.x and event.pos[1]<a_menu.rect.y+33):
                 from os.path import dirname,join
                 here = dirname('main.py')
                 scr = pygame.display.set_mode((640,400))
@@ -420,7 +454,10 @@ def gameover():
                 a_sound.stopsound()
                 
                 while True:
+                    #a_soundgoo.stopsound()
+                    
                     a_soundm.playsound()
+                    
                     resp= slidemenu.menu(['play',
                                          'highscore',
                                         'help',
@@ -436,13 +473,16 @@ def gameover():
                     if resp[0] == "play":
                         load.Load(scr)
                         a_soundm.stopsound()
+                        gameOver=False
                         main()
                     if resp[0] == "highscore":
                         a_soundm.stopsound()
+                       
                         highscorepy.score(screen)
                     if resp[0] == "help":
                         a_soundm.stopsound()
-                        about.about(screen)
+                        
+                        about.abouts(screen)
             
             #display.update()
                     if resp[0] != "re-show": break
@@ -556,9 +596,11 @@ def main():
     RED = (255, 0, 0)
     white = (255,255,255)
     highscore=0
+    gameOver=False
 
 #load.Credits(screen)
-
+    soundgo=Soundsgo()
+    soundgo.stopsounds()
     gameOver = False
     background = pygame.image.load("background/Background_final.png")
     back_rect = background.get_rect()
@@ -572,6 +614,9 @@ def main():
 
 #load.Load(screen)
     x = 0
+
+   
+    
 
     direction = "right"
     lives = 1
@@ -604,6 +649,11 @@ def main():
     coin_group.add(coin)
     coin_spawn_delay = 5
 
+    padyak = Padyak()
+    padyak_group = pygame.sprite.Group()
+    padyak_group.add(padyak)
+    padyak_spawn_delay = 5
+
     font = pygame.font.Font("font/DK Pundak.otf", 27)
     coins=0
     text = font.render("Score: %s" %(coins), 1, (10,15,30))
@@ -618,6 +668,8 @@ def main():
     pavement = load_pavement(pavement)
 
 
+   
+    
     sounds=pygame.sprite.Group()
     a_sound=Sound()
     a_sound.set_image("others/soundOn.png")
@@ -647,18 +699,16 @@ def main():
     a_reload.set_position(525,10)
   
     while True:
+        #lovely.rect.left = 120
         
         for event in pygame.event.get():
             if(lives==1):
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
+                        
                         direction = "rights"
                     
-                    if event.key == pygame.K_LEFT:
-                        direction = "left"
+                    
                     if lovely.jump != "up" or lovely.jump != "down":
                         if event.key == pygame.K_SPACE:
                             screen.blit(love.image, love.rect)
@@ -669,7 +719,10 @@ def main():
                                 lovely.jump_number += 1
                             if lovely.jump_number > 2:
                                 lovely.jump = "up"
+                                
                                 lovely.jump_number += 1.8
+                                lovely.rect.left = 500
+                                
                 #if event.key == pygame.K_p:
                  #   pause()
             #music = pygame.mixer.Sound("sounds-temporay/jum.mp3")
@@ -722,12 +775,17 @@ def main():
                                          hotspot    = (38,15))
                             if resp[0] == "play":
                                 a_soundmenu.stopsound()
+                                a_sound.stopsound()
                                 load.Load(scr)
                                 main()
                             if resp[0] == "highscore":
+                                a_sound.stopsound()
+                                a_soundmenu.stopsound()
                                 highscorepy.score(screen)
                             if resp[0] == "help":
-                                about.about(screen)
+                                a_sound.stopsound()
+                                a_soundmenu.stopsound()
+                                about.abouts(screen)
             
             #display.update()
                             if resp[0] != "re-show": break
@@ -764,9 +822,6 @@ def main():
                     if event.key == pygame.K_RIGHT:
                         direction = "right"
                     
-                    if event.key == pygame.K_LEFT:
-                        direction = "left"
-                    
             #if (event.type==pygame.MOUSEMOTION):
              #   mouse= pygame.mouse.get_pos()
               #  pb=pygame.image.load("others/pause.png")
@@ -798,16 +853,19 @@ def main():
             #lives= 0
 
         if gameOver:
-            #nextScreen = nextLevel()
-            #screen.blit(nextScreen, (0, 0))
-            #coin_group.remove(coin)
             a_sound.stopsound()
+            #soundgo.playsound()
             gameover()
+            
             #print ('f')
         
         if not gameOver:
+            
+            
+            soundover=pygame.sprite.Group()
+            a_soundover=Soundsgo()
 
-            #a_sound.playsound()
+            a_soundover.stopsounds()
             x = scroll(x, direction)
             backsurf.blit(background, (0,0), (x, 0, 640 + x, 420))            
             screen.blit(backsurf, (0,0))
@@ -830,15 +888,15 @@ def main():
             sounds.add(a_sound)
             sounds.draw(screen)
     
-            lovely.rect.top, lovely.jump, lovely.jump_number = jump_update(lovely.rect.top, lovely.jump, lovely.jump_number)
+            #lovely.rect.top, lovely.jump, lovely.jump_number = jump_update(lovely.rect.top, lovely.jump, lovely.jump_number)
             #screen.blit(love.image, love.rect)
-            screen.blit(lovely.image, lovely.rect)
-            if lovely.img_position < 16:
-                lovely.img_position += 1
-            else:
-                lovely.img_position = 0
+            #screen.blit(lovely.image, lovely.rect)
+            #if lovely.img_position < 16:
+             #   lovely.img_position += 1
+            #else:
+             #   lovely.img_position = 0
 
-            lovely.image = pygame.image.load(lovely.img_list[lovely.img_position])
+            #lovely.image = pygame.image.load(lovely.img_list[lovely.img_position])
 
             if ground_counter > 0:
                 pavement.update()
@@ -865,11 +923,11 @@ def main():
             if pygame.sprite.spritecollideany(innerLovely, obstacle_group):
                 lives=lives-1
                 if (lives==0):
-                    
-                   #a_sound.stopsound()
                     gameOver = True
+                    
+                    
             i+=1
-            if coins==5 or coins==8 or coins==14 or coins==20:
+            if coins==5 or coins==8 or coins==14 or coins==20 or coins==25:
                 lovely.rect.left=120
             
                 screen.blit(dogrun.image, dogrun.rect)
@@ -892,6 +950,8 @@ def main():
                 if pygame.sprite.collide_rect( innerLovely, innerdog):
 #            print("collision")
                     gameOver=True
+                    
+                    
             
             
             if direction=='rights':
@@ -914,14 +974,28 @@ def main():
                 if coin.rect.right < 0:
                     coin_group.remove(coin)
                     
-            if coin_spawn_delay > 1:
-                coin_spawn_delay -= 2
+            if coin_spawn_delay > 0:
+                coin_spawn_delay -= 1
             else:
                 coin_group.add(Coin())
                 
                 coin_spawn_delay = random.randrange(20, 100, 5)
             coin_group.update()
             coin_group.draw(screen)
+
+            if coins==1 or coins==8 or coins>20:
+                for padyak in padyak_group:
+                    if padyak.rect.right < 0:
+                        padyak_group.remove(padyak)
+                    
+                if padyak_spawn_delay > 1:
+                    padyak_spawn_delay -= 1
+                else:
+                    padyak_group.add(Padyak())
+                
+                    padyak_spawn_delay = random.randrange(100, 180, 80)
+                padyak_group.update()
+                padyak_group.draw(screen)
 
             innerLovely.rect.center = lovely.rect.center
 
@@ -945,31 +1019,42 @@ def main():
                #     gameOver = True
                     
             #for runrurn
-            #if pygame.sprite.spritecollideany(innerLovely, coin_group):
-                #coin_group.remove(coin)
-                #lovely.rect.top, lovely.jump, lovely.jump_number = jump_update(lovely.rect.top, lovely.jump, lovely.jump_number)
+            if pygame.sprite.spritecollideany(innerLovely, padyak_group):
+                padyak_group.remove(padyak)
+                loves.rect.top, loves.jump, loves.jump_number = jump_update(loves.rect.top, loves.jump, loves.jump_number)
+            #screen.blit(love.image, love.rect)
+                #loves.rect.left=300
+                #lovely.rect.left=300
+                if direction=="right":
+                    x=x+300
+                
+                    if loves.img_position < 2:
+                        loves.img_position += 1
+                    else:
+                        loves.img_position = 0
+
+                
+                
+                    x = scroll(x, direction)
+                    #backsurf.blit(background, (0,0), (x, 0, 640 + x, 420))            
+                    #screen.blit(backsurf, (0,0))
+                    #if loves.rect.top<192:
+                    loves.image = pygame.image.load(loves.img_list[loves.img_position])
+                    screen.blit(loves.image, loves.rect)
+        
+                clock.tick(30)
+                
+            else:
+                lovely.rect.top, lovely.jump, lovely.jump_number = jump_update(lovely.rect.top, lovely.jump, lovely.jump_number)
             #screen.blit(love.image, love.rect)
                 
-                #if loves.img_position < 2:
-                 #   loves.img_position += 1
-                #else:
-                 #   loves.img_position = 0
+                if lovely.img_position < 16:
+                    lovely.img_position += 1
+                else:
+                    lovely.img_position = 0
 
-                #loves.image = pygame.image.load(loves.img_list[loves.img_position])
-                #screen.blit(loves.image, loves.rect)
-                #clock.tick(30)
-                
-            #else:
-                #lovely.rect.top, lovely.jump, lovely.jump_number = jump_update(lovely.rect.top, lovely.jump, lovely.jump_number)
-            #screen.blit(love.image, love.rect)
-                
-                #if lovely.img_position < 16:
-                 #   lovely.img_position += 1
-                #else:
-                 #   lovely.img_position = 0
-
-                #lovely.image = pygame.image.load(lovely.img_list[lovely.img_position])
-                #screen.blit(lovely.image, lovely.rect)
+                lovely.image = pygame.image.load(lovely.img_list[lovely.img_position])
+                screen.blit(lovely.image, lovely.rect)
                 
                 #clock.tick(FPS)
             if pygame.sprite.spritecollideany(innerLovely, coin_group):

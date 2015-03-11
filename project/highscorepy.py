@@ -130,9 +130,11 @@ def score(screen):
                             a_soundscore.stopsound()
                             main.main()
                         if resp[0] == "highscore":
+                            a_soundscore.stopsound()
                             score(screen)
                         if resp[0] == "help":
-                            about.about(scr)
+                            a_soundscore.stopsound()
+                            about.abouts(scr)
             
             #display.update()
                         if resp[0] != "re-show": break

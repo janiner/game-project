@@ -4,15 +4,13 @@
 from pygame import *
 font.init()
 
-from math import cos, radians
-import pygame, sys, random, glob
 from math import cos,radians
 try: import GetEvent
 except: from . import GetEvent
 import load
 import main
 import about
-import highscore
+import highscorepy
 import pygame, sys, random, glob
 
 class Sound(pygame.sprite.Sprite):
@@ -354,7 +352,7 @@ if __name__ == '__main__':
     scr = display.set_mode((640,400))
     sounds=pygame.sprite.Group()
     a_soundmenu=Sound()
-    #load.Credits(scr)
+    load.Credits(scr)
     icon = pygame.image.load('logo/icon.png')
     pygame.display.set_icon(icon)
     #bgs=glob.glob(join(here,"others/start*.jpg"))
@@ -384,9 +382,11 @@ if __name__ == '__main__':
             a_soundmenu.stopsound()
             main.main()
         if resp[0] == "highscore":
-            highscore.score(scr)
+            a_soundmenu.stopsound()
+            highscorepy.score(scr)
         if resp[0] == "help":
-            about.about(scr)
+            a_soundmenu.stopsound()
+            about.abouts(scr)
             
             #display.update()
         if resp[0] != "re-show": break
